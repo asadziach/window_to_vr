@@ -13,6 +13,6 @@ public class PhtoSphereRenderer extends VrPanoramaRenderer{
 
     public PhtoSphereRenderer(Context context, VrWidgetRenderer.GLThreadScheduler glThreadScheduler, float xMetersPerPixel, float yMetersPerPixel, int screenRotation, MyVrWidgetView panoView)
     {
-        super(context, glThreadScheduler, xMetersPerPixel, yMetersPerPixel, screenRotation, panoView);
+        super(context, glThreadScheduler, xMetersPerPixel, yMetersPerPixel, screenRotation, new VrPanoramaView(context));
     }
 }

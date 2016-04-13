@@ -39,6 +39,7 @@ import com.google.vrtoolkit.cardboard.widgets.common.FullScreenDialog;
 import com.google.vrtoolkit.cardboard.widgets.common.TrackingSensorsHelper;
 import com.google.vrtoolkit.cardboard.widgets.common.VrEventListener;
 import com.google.vrtoolkit.cardboard.widgets.common.VrWidgetRenderer;
+import com.google.vrtoolkit.cardboard.widgets.common.VrWidgetView;
 import com.google.vrtoolkit.cardboard.widgets.pano.PhtoSphereRenderer;
 import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaEventListener;
 import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
@@ -79,7 +80,7 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */ 
 /*     */ 
 /*     */ public class MyVrWidgetView
-/*     */   extends VrPanoramaView
+/*     */   extends VrWidgetView
 /*     */ {
 /*  41 */   private static final String TAG = MyVrWidgetView.class.getSimpleName();
 /*     */   
@@ -708,11 +709,11 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */     public static final int FULLSCREEN_MONO = 2;
 /*     */     public static final int FULLSCREEN_VR = 3;
 /*     */   }
-    public void loadImageFromBitmap(Bitmap bitmap, Options panoOptions)
+    public void loadImageFromBitmap(Bitmap bitmap, VrPanoramaView.Options panoOptions)
     {
 
         if (panoOptions == null) {
-            panoOptions = new Options();
+            panoOptions = new VrPanoramaView.Options();
         } else {
             if ((panoOptions.inputType <= 0) || (panoOptions.inputType >= 3))
             {
