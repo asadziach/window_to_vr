@@ -55,14 +55,6 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */ 
 /*     */ 
 /*     */   private boolean isPaused;
-/*     */   
-/*     */ 
-/*     */
-/*     */   
-/*     */ 
-/*     */ 
-/*     */   private ViewGroup innerWidgetView;
-/*     */   
 /*     */ 
 /*     */ 
 /*     */   private GLSurfaceView renderingView;
@@ -135,17 +127,13 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */ 
 /*     */ 
 /* 207 */     initializeRenderingView();
-/* 208 */     this.innerWidgetView = new FrameLayout(getContext());
-/*     */     
-/* 210 */     this.innerWidgetView.setId(R.id.vrwidget_inner_view);
-/* 211 */     this.innerWidgetView.addView(this.renderingView);
 /*     */     
 /*     */ 
 /* 214 */     setPadding(0, 0, 0, 0);
-/* 215 */     addView(this.innerWidgetView);
+/* 215 */     addView(this.renderingView);
 /*     */
 /*     */     
-/* 219 */     this.fullScreenDialog = new FullScreenDialog(getContext(), this.innerWidgetView, this.renderer);
+/* 219 */     this.fullScreenDialog = new FullScreenDialog(getContext(), this, this.renderer);
 /*     */
 /*     */   }
 /*     */
