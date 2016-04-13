@@ -86,7 +86,7 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */   
 /*     */   private static final boolean DEBUG = false;
 /*     */   
-/*  45 */   private static final Uri INFO_BUTTON_URL = Uri.parse("https://g.co/vr/view");
+/*  45 */
 /*     */   
 /*     */ 
 /*     */ 
@@ -142,34 +142,7 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */   private GLSurfaceView renderingView;
 /*     */   
 /*     */ 
-/*     */ 
-/*     */   private View uiView;
-/*     */   
-/*     */ 
-/*     */ 
-/*     */   private ImageButton enterCardboardButton;
-/*     */   
-/*     */ 
-/*     */ 
-/*     */   private ImageButton enterFullscreenButton;
-/*     */   
-/*     */ 
-/*     */ 
-/*     */   private ImageButton fullscreenBackButton;
-/*     */   
-/*     */ 
-/*     */ 
-/*     */   private ImageButton infoButton;
-/*     */   
-/*     */ 
-/*     */ 
-/*     */   private boolean isCardboardButtonEnabled;
-/*     */   
-/*     */ 
-/*     */   private boolean isFullscreenButtonEnabled;
-/*     */   
-/*     */ 
-/*     */   private boolean isInfoButtonEnabled;
+/*     */
 /*     */   
 /*     */ 
 /*     */   public FullScreenDialog fullScreenDialog;
@@ -183,14 +156,12 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */ 
 /*     */   private OrientationHelper orientationHelper;
 /*     */   
-/*     */ 
-/*     */   private ViewRotator viewRotator;
+/*     */
 /*     */   
 /*     */ 
 /*     */   private boolean isFullScreen;
 /*     */   
-/*     */ 
-/*     */   UiLayer vrUiLayer;
+/*     */
 /*     */   
 /*     */ 
 /*     */   private boolean isVrMode;
@@ -231,9 +202,6 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */     
 /* 188 */     this.sensorsHelper = new TrackingSensorsHelper(getContext().getPackageManager());
               isFullScreen = true;
-/* 189 */     this.isCardboardButtonEnabled = false;// this.sensorsHelper.areTrackingSensorsAvailable();
-/* 190 */     this.isFullscreenButtonEnabled = true;
-/* 191 */     this.isInfoButtonEnabled = false;
 /*     */     
 /* 193 */     this.screenOnFlagHelper = new ScreenOnFlagHelper(this.activity);
 /*     */     
@@ -270,56 +238,9 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */       }
 /*     */       
 /* 227 */     });
-/* 228 */     this.uiView = inflate(getContext(), R.layout.ui_view_embed, null);
-/*     */     
-/*     */ 
-/*     */ 
-/* 232 */     this.viewRotator = new ViewRotator(getContext(), this.uiView, getScreenRotationInDegrees(display.getRotation()), this.sensorsHelper.areTrackingSensorsAvailable());
-/* 233 */     this.innerWidgetView.addView(this.uiView);
-/*     */     
-/*     */ 
-/* 236 */     this.innerWidgetView.addView(new View(getContext()));
-/*     */     
-/* 238 */     this.vrUiLayer = new UiLayer(getContext());
-/*     */     
-/*     */ 
-/* 241 */     this.vrUiLayer.setPortraitSupportEnabled(true);
-/* 242 */     this.vrUiLayer.setEnabled(true);
-/* 243 */     this.innerWidgetView.addView(this.vrUiLayer.getView());
-/*     */     
-/* 245 */     initializeUiButtons();
-/* 246 */     initializeTouchTracker();
+/*     */
 /*     */   }
-/*     */   
-/*     */   private void initializeTouchTracker() {
-/* 250 */     TouchTracker touchTracker = new TouchTracker(getContext(), new TouchTracker.TouchEnabledVrView()
-/*     */     {
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */       public void setYawPitchOffset(float yaw, float pitch)
-/*     */       {
-/*     */ 
-/*     */ 
-/*     */ 
-/* 261 */         MyVrWidgetView.this.offsetDegrees.set(yaw, pitch);
-/*     */       }
-/*     */       
-/*     */       public VrEventListener getEventListener()
-/*     */       {
-/* 266 */         return MyVrWidgetView.this.eventListener;
-/*     */       }
-/*     */     });
-/*     */     
-/*     */ 
-/* 271 */     if (this.sensorsHelper.areTrackingSensorsAvailable())
-/*     */     {
-/* 273 */       touchTracker.setTouchSpeed(0.0F, 0.0F);
-/*     */     }
-/*     */     
-/* 276 */     setOnTouchListener(touchTracker);
-/*     */   }
+/*     */
 /*     */   
 /*     */   private void initializeRenderingView(int rotation) {
 /* 280 */     this.renderingView = new GLSurfaceView(getContext());
@@ -354,56 +275,14 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   private void initializeUiButtons()
-/*     */   {
-/* 310 */     this.enterFullscreenButton = ((ImageButton)this.uiView.findViewById(R.id.fullscreen_button));
-/* 311 */     this.enterFullscreenButton.setOnClickListener(new OnClickListener()
-/*     */     {
-/*     */       public void onClick(View v) {
-/* 314 */         MyVrWidgetView.this.isVrMode = false;
-/* 315 */         MyVrWidgetView.this.isFullScreen = true;
-/* 316 */         MyVrWidgetView.this.toggleFullScreen();
-/*     */       }
-/*     */       
-/* 319 */     });
-/* 320 */     this.enterCardboardButton = ((ImageButton)this.uiView.findViewById(R.id.cardboard_button));
-/* 321 */     this.enterCardboardButton.setOnClickListener(new OnClickListener()
-/*     */     {
-/*     */       public void onClick(View v) {
-/* 324 */         MyVrWidgetView.this.isVrMode = true;
-/* 325 */         MyVrWidgetView.this.isFullScreen = true;
-/* 326 */         MyVrWidgetView.this.toggleFullScreen();
-/*     */       }
-/*     */       
-/* 329 */     });
-/* 330 */     this.fullscreenBackButton = ((ImageButton)this.uiView.findViewById(R.id.fullscreen_back_button));
-/* 331 */     this.fullscreenBackButton.setOnClickListener(new OnClickListener()
-/*     */     {
-/*     */       public void onClick(View v) {
-/* 334 */         MyVrWidgetView.this.isVrMode = false;
-/* 335 */         MyVrWidgetView.this.isFullScreen = false;
-/* 336 */         MyVrWidgetView.this.toggleFullScreen();
-/*     */       }
-/*     */       
-/* 339 */     });
-/* 340 */     this.infoButton = ((ImageButton)this.uiView.findViewById(R.id.info_button));
-/* 341 */     this.infoButton.setOnClickListener(new OnClickListener()
-/*     */     {
-/*     */       public void onClick(View v) {
-/* 344 */         MyVrWidgetView.this.activity.startActivity(MyVrWidgetView.getInfoButtonIntent());
-/*     */       }
-/*     */       
-/* 347 */     });
-/* 348 */     updateButtonVisibility();
-/*     */   }
-/*     */   
+
 /*     */   private void toggleFullScreen()
 /*     */   {
 /* 353 */     if (!this.isFullScreen)
 /*     */     {
 /* 355 */       this.isVrMode = false;
 /*     */     }
-/*     */     
+/*     */
 /*     */ 
 /*     */ 
 /*     */ 
@@ -425,37 +304,12 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /* 376 */       this.fullScreenDialog.dismiss();
 /* 377 */       this.orientationHelper.restoreOriginalOrientation();
 /*     */     }
-/*     */     
-/* 380 */     updateControlsLayout();
+/*     */
 /*     */     
 /* 382 */     this.eventListener.onDisplayModeChanged(getDisplayMode());
 /*     */   }
-/*     */   
-/*     */   private void updateControlsLayout() {
-/* 386 */     LinearLayout controlLayout = (LinearLayout)this.innerWidgetView.findViewById(R.id.control_layout);
-/*     */     
-/* 388 */     RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)controlLayout.getLayoutParams();
-/*     */     
-/*     */ 
-/*     */ 
-/*     */ 
-/* 393 */     if ((this.isFullScreen) && (this.isVrMode) && (this.orientationHelper.isInPortraitOrientation())) {
-/* 394 */       layoutParams.addRule(9);
-/*     */       
-/* 396 */       layoutParams.addRule(11, 0);
-/*     */     } else {
-/* 398 */       layoutParams.addRule(9, 0);
-/* 399 */       layoutParams.addRule(11);
-/*     */     }
-/* 401 */     controlLayout.setLayoutParams(layoutParams);
-/*     */     
-/*     */ 
-/* 404 */     if ((this.isFullScreen) && (!this.isVrMode)) {
-/* 405 */       this.viewRotator.enable();
-/*     */     } else {
-/* 407 */       this.viewRotator.disable();
-/*     */     }
-/*     */   }
+/*     */
+
 /*     */   
 /*     */   private void updateVrMode() {
 /* 412 */     this.renderer.setVrMode(this.isVrMode);
@@ -465,57 +319,10 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */     } else {
 /* 417 */       this.screenOnFlagHelper.stop();
 /*     */     }
-/*     */     
-/* 420 */     updateButtonVisibility();
-/* 421 */     updateViewerName();
+/*     */
 /*     */   }
 /*     */   
-/*     */   private void updateButtonVisibility() {
-/* 425 */     if ((this.isFullscreenButtonEnabled) && ((this.isVrMode) || (!this.isFullScreen))) {
-/* 426 */       this.enterFullscreenButton.setVisibility(0);
-/*     */     } else {
-/* 428 */       this.enterFullscreenButton.setVisibility(8);
-/*     */     }
-/*     */     
-/* 431 */     if ((this.isCardboardButtonEnabled) && (!this.isVrMode)) {
-/* 432 */       this.enterCardboardButton.setVisibility(0);
-/*     */     } else {
-/* 434 */       this.enterCardboardButton.setVisibility(8);
-/*     */     }
-/*     */     
-/* 437 */     this.vrUiLayer.setSettingsButtonEnabled(this.isVrMode);
-/* 438 */     this.vrUiLayer.setAlignmentMarkerEnabled(this.isVrMode);
-/* 439 */     this.vrUiLayer.setTransitionViewEnabled(this.isVrMode);
-/*     */     
-/* 441 */     if (!this.isFullScreen)
-/*     */     {
-/* 443 */       this.fullscreenBackButton.setVisibility(8);
-/* 444 */       this.vrUiLayer.setBackButtonListener(null);
-/*     */     }
-/* 446 */     else if (this.isVrMode)
-/*     */     {
-/*     */ 
-/*     */ 
-/*     */ 
-/* 451 */       this.fullscreenBackButton.setVisibility(8);
-/* 452 */       this.vrUiLayer.setBackButtonListener(new Runnable()
-/*     */       {
-/*     */         public void run() {
-/* 455 */           MyVrWidgetView.this.isVrMode = false;
-/* 456 */           MyVrWidgetView.this.isFullScreen = false;
-/* 457 */           MyVrWidgetView.this.toggleFullScreen();
-/*     */         }
-/*     */       });
-/*     */     }
-/*     */     else {
-/* 462 */       this.fullscreenBackButton.setVisibility(0);
-/* 463 */       this.vrUiLayer.setBackButtonListener(null);
-/*     */     }
-/*     */     
-/*     */ 
-/* 467 */     this.infoButton.setVisibility((this.isInfoButtonEnabled) && (!this.isVrMode) ? 0 : 8);
-/*     */   }
-/*     */   
+/*     */  /*     */
 /*     */   private int getScreenRotationInDegrees(int rotation) {
 /* 471 */     switch (rotation) {
 /*     */     case 1: 
@@ -557,7 +364,6 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /* 507 */     this.renderer.onPause();
 /* 508 */     this.screenOnFlagHelper.stop();
 /* 509 */     this.isPaused = true;
-/* 510 */     this.viewRotator.disable();
 /*     */   }
 /*     */   
 /*     */ 
@@ -575,8 +381,6 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /* 525 */     if (this.isFullScreen) {
 /* 526 */       this.fullScreenDialog.show();
 /*     */     }
-/* 528 */     updateButtonVisibility();
-/* 529 */     updateControlsLayout();
 /* 530 */     this.isPaused = false;
 /*     */   }
 /*     */   
@@ -614,39 +418,7 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   public void setCardboardButtonEnabled(boolean enabled)
-/*     */   {
-/* 569 */     boolean sensorsAvailable = this.sensorsHelper.areTrackingSensorsAvailable();
-/* 570 */     if ((enabled) && (!sensorsAvailable)) {
-/* 571 */       Log.w(TAG, "This phone doesn't have the necessary sensors for head tracking, Cardboard button will be disabled.");
-/*     */     }
-/*     */     
-/* 574 */     this.isCardboardButtonEnabled = ((enabled) && (sensorsAvailable));
-/* 575 */     updateButtonVisibility();
-/*     */   }
-/*     */   
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */   public void setFullscreenButtonEnabled(boolean enabled)
-/*     */   {
-/* 584 */     this.isFullscreenButtonEnabled = enabled;
-/* 585 */     updateButtonVisibility();
-/*     */   }
-/*     */   
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */   public void setInfoButtonEnabled(boolean enabled)
-/*     */   {
-/* 595 */     this.isInfoButtonEnabled = enabled;
-/* 596 */     updateButtonVisibility();
-/*     */   }
-/*     */   
-/*     */ 
+
 /*     */ 
 /*     */ 
 /*     */ 
@@ -693,15 +465,8 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */     }
 /* 644 */     return this.isVrMode ? 3 : 2;
 /*     */   }
-/*     */   
-/*     */   static Intent getInfoButtonIntent() {
-/* 648 */     return new Intent("android.intent.action.VIEW", INFO_BUTTON_URL);
-/*     */   }
-/*     */   
-/*     */   private void updateViewerName() {
-/* 652 */     CardboardDevice.DeviceParams deviceProto = this.viewerParamsProvider.readDeviceParams();
-/* 653 */     this.vrUiLayer.setViewerName(deviceProto == null ? null : deviceProto.getModel());
-/*     */   }
+/*     */
+/*     */
 /*     */   
 /*     */   public static abstract class DisplayMode
 /*     */   {
