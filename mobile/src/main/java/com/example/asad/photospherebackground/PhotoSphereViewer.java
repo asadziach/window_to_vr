@@ -24,6 +24,7 @@ import java.io.InputStream;
 public class PhotoSphereViewer extends Activity {
 
     private static final String TAG = PhotoSphereViewer.class.getSimpleName();
+    public static Activity instance;
     /**
      * Actual panorama widget.
      **/
@@ -54,6 +55,8 @@ public class PhotoSphereViewer extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        instance = this;
 
         glView = new GLSurfaceView(this);
         glView.setEGLContextClientVersion(2);
