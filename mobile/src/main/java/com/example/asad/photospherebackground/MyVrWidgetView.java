@@ -6,10 +6,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.PointF;
-import android.net.Uri;
 import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,30 +15,19 @@ import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Display;
-import android.view.MotionEvent;
-import android.view.OrientationEventListener;
-import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
-import com.google.vr.cardboard.UiLayer;
 import com.google.vr.cardboard.VrParamsProvider;
 import com.google.vr.cardboard.VrParamsProviderFactory;
 import com.google.vrtoolkit.cardboard.ScreenOnFlagHelper;
-import com.google.vrtoolkit.cardboard.proto.nano.CardboardDevice;
 import com.google.vrtoolkit.cardboard.widgets.common.FullScreenDialog;
 import com.google.vrtoolkit.cardboard.widgets.common.TrackingSensorsHelper;
 import com.google.vrtoolkit.cardboard.widgets.common.VrEventListener;
 import com.google.vrtoolkit.cardboard.widgets.common.VrWidgetRenderer;
-import com.google.vrtoolkit.cardboard.widgets.common.VrWidgetView;
-import com.google.vrtoolkit.cardboard.widgets.pano.PhtoSphereRenderer;
+import com.google.vrtoolkit.cardboard.widgets.pano.PhotoSphereRenderer;
 import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaEventListener;
 import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 
@@ -81,7 +68,7 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */ 
 /*  70 */   private PointF offsetDegrees = new PointF();
 /*     */   
-/*     */   private PhtoSphereRenderer renderer;
+/*     */   private PhotoSphereRenderer renderer;
 /*     */   
 /*  74 */   private VrEventListener eventListener = new VrPanoramaEventListener();
 /*     */   
@@ -232,8 +219,8 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   protected  PhtoSphereRenderer createRenderer(Context paramContext, VrWidgetRenderer.GLThreadScheduler glThreadScheduler, float xMetersPerPixel, float yMetersPerPixel, int screenRotation){
-               this.renderer = new PhtoSphereRenderer(getContext(), glThreadScheduler, xMetersPerPixel, yMetersPerPixel, screenRotation);
+/*     */   protected PhotoSphereRenderer createRenderer(Context paramContext, VrWidgetRenderer.GLThreadScheduler glThreadScheduler, float xMetersPerPixel, float yMetersPerPixel, int screenRotation){
+               this.renderer = new PhotoSphereRenderer(getContext(), glThreadScheduler, xMetersPerPixel, yMetersPerPixel, screenRotation);
 
               return this.renderer;
             }

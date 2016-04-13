@@ -5,20 +5,12 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.opengl.GLSurfaceView;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Pair;
-import android.view.Display;
-import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.google.vrtoolkit.cardboard.ScreenOnFlagHelper;
-import com.google.vrtoolkit.cardboard.widgets.common.VrWidgetRenderer;
-import com.google.vrtoolkit.cardboard.widgets.pano.PhtoSphereRenderer;
 import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaEventListener;
 import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView.Options;
@@ -85,7 +77,7 @@ public class PhotoSphereViewer extends Activity {
 ///*     */
 ///* 294 */     };
 //        int screenRotation = getScreenRotationInDegrees(display.getRotation());
-///* 295 */     PhtoSphereRenderer renderer = new PhtoSphereRenderer(this, scheduler, xMetersPerPixel, yMetersPerPixel, screenRotation, panoWidgetView);
+///* 295 */     PhotoSphereRenderer renderer = new PhotoSphereRenderer(this, scheduler, xMetersPerPixel, yMetersPerPixel, screenRotation, panoWidgetView);
 //
 ///* 297 */     glview.setRenderer(renderer);
 
