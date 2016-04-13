@@ -4,27 +4,17 @@
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.graphics.Bitmap;
-import android.graphics.PointF;
 import android.opengl.GLSurfaceView;
 import android.os.Build;
-import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
-import com.google.vr.cardboard.VrParamsProvider;
-import com.google.vr.cardboard.VrParamsProviderFactory;
 import com.google.vrtoolkit.cardboard.ScreenOnFlagHelper;
-import com.google.vrtoolkit.cardboard.widgets.common.FullScreenDialog;
-import com.google.vrtoolkit.cardboard.widgets.common.TrackingSensorsHelper;
 import com.google.vrtoolkit.cardboard.widgets.common.VrEventListener;
 import com.google.vrtoolkit.cardboard.widgets.common.VrWidgetRenderer;
 import com.google.vrtoolkit.cardboard.widgets.pano.PhotoSphereRenderer;
@@ -41,8 +31,8 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */
 /*     */   
 /*     */   private PhotoSphereRenderer renderer;
-/*     */   
-/*  74 */   private VrEventListener eventListener = new VrPanoramaEventListener();
+/*     */
+/*  74 */   private VrEventListener eventListener = new VrPanoramaEventListener();// Needed by renderere
 /*     */   
 /*     */ 
 /*     */ 
@@ -50,32 +40,12 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */   
 /*     */ 
 /*     */ 
-/*     */   private Activity activity;
-/*     */   
-/*     */ 
-/*     */ 
 /*     */   private boolean isPaused;
 /*     */ 
 /*     */ 
 /*     */   private GLSurfaceView renderingView;
+
 /*     */   
-/*     */ 
-/*     */
-/*     */   
-/*     */ 
-/*     */   public FullScreenDialog fullScreenDialog;
-/*     */   
-/*     */
-/*     */   
-/*     */ 
-/*     */   private ScreenOnFlagHelper screenOnFlagHelper;
-/*     */   
-/*     *
-/*     */   
-/*     */
-/*     */   
-/*     */ 
-/*     */   private boolean isFullScreen;
 
 /*     */   
 /*     */ 
@@ -83,7 +53,7 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */   public MyVrWidgetView(Context context, AttributeSet attrs)
 /*     */   {
 /* 158 */     super(context, attrs);
-/* 159 */     checkContextIsActivity(context);
+
 /* 160 */     init();
 /*     */   }
 /*     */   
@@ -93,26 +63,16 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */   public MyVrWidgetView(Context context)
 /*     */   {
 /* 168 */     super(context);
-/* 169 */     checkContextIsActivity(context);
 /* 170 */     init();
 /*     */   }
 /*     */   
-/*     */   private void checkContextIsActivity(Context context) {
-/* 174 */     if (!(context instanceof Activity)) {
-/* 175 */       throw new RuntimeException("Context must be an instance of activity");
-/*     */     }
-/* 177 */     this.activity = ((Activity)context);
-/*     */   }
-/*     */   
+
 /*     */ 
 /*     */ 
 /*     */ 
 /*     */ 
 /*     */   private void init()
 /*     */   {
-              isFullScreen = true;
-/*     */     
-/* 193 */     this.screenOnFlagHelper = new ScreenOnFlagHelper(this.activity);
 /*     */     
 /*     */ 
 /* 196 */     WindowManager windowManager = (WindowManager)getContext().getSystemService("window");
@@ -127,13 +87,10 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */ 
 /*     */ 
 /* 207 */     initializeRenderingView();
-/*     */     
-/*     */ 
-/* 214 */     setPadding(0, 0, 0, 0);
+/*     */
 /* 215 */     addView(this.renderingView);
 /*     */
-/*     */     
-/* 219 */     this.fullScreenDialog = new FullScreenDialog(getContext(), this, this.renderer);
+/*     */
 /*     */
 /*     */   }
 /*     */
@@ -174,7 +131,6 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */   {
 /* 506 */     this.renderingView.onPause();
 /* 507 */     this.renderer.onPause();
-/* 508 */     this.screenOnFlagHelper.stop();
 /* 509 */     this.isPaused = true;
 /*     */   }
 /*     */   
@@ -184,9 +140,8 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */   {
 /* 522 */     this.renderingView.onResume();
 /* 523 */     this.renderer.onResume();
-/* 525 */     if (this.isFullScreen) {
-/* 526 */       this.fullScreenDialog.show();
-/*     */     }
+
+/*     */
 /* 530 */     this.isPaused = false;
 /*     */   }
 /*     */   
