@@ -22,6 +22,9 @@ public class PhotoSphereRenderer extends VrPanoramaRenderer{
     @Override
     public void onDrawFrame(GL10 gl) {
 
+        /**
+         * TODO: This is slow and just a 'proof of concept' for now.
+         */
         Field field = null;
         long id = 0;
         try {
