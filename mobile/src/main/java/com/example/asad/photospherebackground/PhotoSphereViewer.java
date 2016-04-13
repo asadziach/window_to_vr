@@ -5,12 +5,14 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.opengl.GLSurfaceView;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
 import android.widget.Toast;
 
+import com.google.vrtoolkit.cardboard.widgets.pano.PhotoSphereRenderer;
 import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaEventListener;
 import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView.Options;
@@ -48,7 +50,11 @@ public class PhotoSphereViewer extends Activity {
         super.onCreate(savedInstanceState);
 
         panoWidgetView = new VrViewHelper(this);
-        setContentView(panoWidgetView.getRenderingView());
+        GLSurfaceView glView = panoWidgetView.getRenderingView();
+        PhotoSphereRenderer renderer = panoWidgetView.getRenderer();
+        glView.setRenderer(renderer);
+
+        setContentView(glView);
 
         // Initial launch of the app or an Activity recreation due to rotation.
         handleIntent(getIntent());

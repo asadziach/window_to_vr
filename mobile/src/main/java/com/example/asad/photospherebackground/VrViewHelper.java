@@ -64,6 +64,9 @@ public class VrViewHelper {
 
     }
 
+    PhotoSphereRenderer getRenderer(){
+        return this.renderer;
+    }
 
     private void initializeRenderingView() {
         this.renderingView = new GLSurfaceView(context);
@@ -81,7 +84,6 @@ public class VrViewHelper {
 
         };
         this.renderer = new PhotoSphereRenderer(context, scheduler, xMetersPerPixel, yMetersPerPixel, 0);
-        this.renderingView.setRenderer(this.renderer);
     }
 
 
