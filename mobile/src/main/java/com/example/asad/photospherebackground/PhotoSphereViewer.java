@@ -7,13 +7,11 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.Html;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.util.Pair;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.vrtoolkit.cardboard.widgets.common.VrWidgetView;
 import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaEventListener;
 import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView.Options;
@@ -27,7 +25,7 @@ public class PhotoSphereViewer extends Activity {
 
     private static final String TAG = PhotoSphereViewer.class.getSimpleName();
     /** Actual panorama widget. **/
-    private VrPanoramaView panoWidgetView;
+    private MyVrWidgetView panoWidgetView;
     /**
      * Arbitrary variable to track load status. In this example, this variable should only be accessed
      * on the UI thread. In a real app, this variable would be code that performs some UI actions when
@@ -48,7 +46,7 @@ public class PhotoSphereViewer extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        panoWidgetView = new VrPanoramaView(this);
+        panoWidgetView = new MyVrWidgetView(this);
         panoWidgetView.setEventListener(new ActivityEventListener());
 
         setContentView(panoWidgetView);
