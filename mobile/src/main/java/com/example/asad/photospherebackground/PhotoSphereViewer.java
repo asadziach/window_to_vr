@@ -10,10 +10,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
-import android.widget.Toast;
 
 import com.google.vrtoolkit.cardboard.widgets.pano.PhotoSphereRenderer;
-import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaEventListener;
 import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView.Options;
 
@@ -25,7 +23,9 @@ import java.io.InputStream;
 public class PhotoSphereViewer extends Activity {
 
     private static final String TAG = PhotoSphereViewer.class.getSimpleName();
-    /** Actual panorama widget. **/
+    /**
+     * Actual panorama widget.
+     **/
     private VrViewHelper panoWidgetView;
     /**
      * Arbitrary variable to track load status. In this example, this variable should only be accessed
@@ -33,14 +33,19 @@ public class PhotoSphereViewer extends Activity {
      * the panorama is fully loaded.
      */
     private boolean loadImageSuccessful;
-    /** Tracks the file to be loaded across the lifetime of this app. **/
+    /**
+     * Tracks the file to be loaded across the lifetime of this app.
+     **/
     private Uri fileUri;
-    /** Configuration information for the panorama. **/
+    /**
+     * Configuration information for the panorama.
+     **/
     private VrPanoramaView.Options panoOptions = new Options();
     private ImageLoaderTask backgroundImageLoaderTask;
 
     //private GLSurfaceView glview;
     //private ScreenOnFlagHelper screenOnFlagHelper;
+
     /**
      * Called when the app is launched via the app icon or an intent using the adb command above. This
      * initializes the app and loads the image to render.
@@ -123,7 +128,7 @@ public class PhotoSphereViewer extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-       // glview.onResume();
+        // glview.onResume();
         //screenOnFlagHelper.start();
         panoWidgetView.resumeRendering();
     }
@@ -185,41 +190,4 @@ public class PhotoSphereViewer extends Activity {
         }
     }
 
-    /**
-     * Listen to the important events from widget.
-     */
-    private class ActivityEventListener extends VrPanoramaEventListener {
-        /**
-         * Called by pano widget on the UI thread when it's done loading the image.
-         */
-        @Override
-        public void onLoadSuccess() {
-            loadImageSuccessful = true;
-        }
-
-        /**
-         * Called by pano widget on the UI thread on any asynchronous error.
-         */
-        @Override
-        public void onLoadError(String errorMessage) {
-            loadImageSuccessful = false;
-            Toast.makeText(
-                    PhotoSphereViewer.this, "Error loading pano: " + errorMessage, Toast.LENGTH_LONG)
-                    .show();
-            Log.e(TAG, "Error loading pano: " + errorMessage);
-        }
-    }
-
-    /*     */   private int getScreenRotationInDegrees(int rotation) {
-/* 471 */     switch (rotation) {
-/*     */     case 1:
-/* 473 */       return 90;
-/*     */     case 2:
-/* 475 */       return 180;
-/*     */     case 3:
-/* 477 */       return 270;
-/*     */     }
-/*     */
-/* 480 */     return 0;
-/*     */   }
 }
