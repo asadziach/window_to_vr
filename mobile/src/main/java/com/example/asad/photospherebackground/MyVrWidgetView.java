@@ -37,33 +37,6 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */ public class MyVrWidgetView
 /*     */   extends FrameLayout
 /*     */ {
-/*  41 */   private static final String TAG = MyVrWidgetView.class.getSimpleName();
-/*     */   
-/*     */   private static final boolean DEBUG = false;
-/*     */   
-/*  45 */
-/*     */   
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */   private static final String STATE_KEY_SUPER_CLASS = "superClassState";
-/*     */   
-/*     */ 
-/*     */ 
-/*     */   private static final String STATE_KEY_ORIENTATION_HELPER = "orientationHelperState";
-/*     */   
-/*     */ 
-/*     */ 
-/*     */   private static final String STATE_KEY_IS_FULL_SCREEN = "isFullScreen";
-/*     */   
-/*     */ 
-/*     */ 
-/*     */   private static final String STATE_KEY_IS_VR_MODE = "isVrMode";
-/*     */   
-/*     */ 
-/*     */ 
-/*     */   private static final float METERS_PER_INCH = 0.0254F;
-/*     */   
 /*     */ 
 /*     */
 /*     */   
@@ -161,7 +134,7 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */     
 /*     */ 
 /*     */ 
-/* 207 */     initializeRenderingView(display.getRotation());
+/* 207 */     initializeRenderingView();
 /* 208 */     this.innerWidgetView = new FrameLayout(getContext());
 /*     */     
 /* 210 */     this.innerWidgetView.setId(R.id.vrwidget_inner_view);
@@ -173,19 +146,11 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */
 /*     */     
 /* 219 */     this.fullScreenDialog = new FullScreenDialog(getContext(), this.innerWidgetView, this.renderer);
-/* 220 */     this.fullScreenDialog.setOnCancelListener(new OnCancelListener()
-/*     */     {
-/*     */       public void onCancel(DialogInterface dialog) {
-/* 223 */         MyVrWidgetView.this.isFullScreen = false;
-/* 224 */         MyVrWidgetView.this.toggleFullScreen();
-/*     */       }
-/*     */       
-/* 227 */     });
 /*     */
 /*     */   }
 /*     */
 /*     */   
-/*     */   private void initializeRenderingView(int rotation) {
+/*     */   private void initializeRenderingView() {
 /* 280 */     this.renderingView = new GLSurfaceView(getContext());
 /* 281 */     this.renderingView.setEGLContextClientVersion(2);
 /* 282 */     this.renderingView.setEGLConfigChooser(8, 8, 8, 8, 16, 8);
@@ -214,25 +179,6 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 
               return this.renderer;
             }
-/*     */   
-/*     */ 
-/*     */ 
-/*     */ 
-
-/*     */   private void toggleFullScreen()
-/*     */   {
-/* 365 */     if (this.isFullScreen)
-/*     */     {
-
-/* 374 */       this.fullScreenDialog.show();
-/*     */     } else {
-/* 376 */       this.fullScreenDialog.dismiss();
-/*     */     }
-/*     */
-/*     */   }
-/*     */
-
-/*     */
 /*     */   
 
 /*     */ 
