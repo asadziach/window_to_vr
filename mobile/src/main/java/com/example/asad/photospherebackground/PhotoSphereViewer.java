@@ -16,6 +16,7 @@ import android.view.Display;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.google.vrtoolkit.cardboard.ScreenOnFlagHelper;
 import com.google.vrtoolkit.cardboard.widgets.common.VrWidgetRenderer;
 import com.google.vrtoolkit.cardboard.widgets.pano.PhtoSphereRenderer;
 import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaEventListener;
@@ -44,7 +45,8 @@ public class PhotoSphereViewer extends Activity {
     private VrPanoramaView.Options panoOptions = new Options();
     private ImageLoaderTask backgroundImageLoaderTask;
 
-    private GLSurfaceView glview;
+    //private GLSurfaceView glview;
+    //private ScreenOnFlagHelper screenOnFlagHelper;
     /**
      * Called when the app is launched via the app icon or an intent using the adb command above. This
      * initializes the app and loads the image to render.
@@ -54,37 +56,38 @@ public class PhotoSphereViewer extends Activity {
         super.onCreate(savedInstanceState);
 
         panoWidgetView = new MyVrWidgetView(this);
-//        panoWidgetView.setEventListener(new ActivityEventListener());
-//        setContentView(panoWidgetView);
+        panoWidgetView.setEventListener(new ActivityEventListener());
+        setContentView(panoWidgetView);
 
-/* 196 */     WindowManager windowManager = (WindowManager)getSystemService("window");
-/* 197 */     Display display = windowManager.getDefaultDisplay();
-/* 198 */     DisplayMetrics displayMetrics = new DisplayMetrics();
-/* 199 */     if (Build.VERSION.SDK_INT >= 17) {
-/* 200 */       display.getRealMetrics(displayMetrics);
-/*     */     } else {
-/* 202 */       display.getMetrics(displayMetrics);
-/*     */     }
-
-         glview = new GLSurfaceView(this);
-        glview.setEGLContextClientVersion(2);
-/* 282 */     glview.setEGLConfigChooser(8, 8, 8, 8, 16, 8);
-/* 283 */     glview.setPreserveEGLContextOnPause(true);
-/*     */
-/* 285 */     float xMetersPerPixel = 0.0254F / displayMetrics.xdpi;
-/* 286 */     float yMetersPerPixel = 0.0254F / displayMetrics.ydpi;
-/*     */
-/* 288 */     VrWidgetRenderer.GLThreadScheduler scheduler = new VrWidgetRenderer.GLThreadScheduler()
-/*     */     {
-            /*     */       public void queueGlThreadEvent(Runnable runnable) {
-/* 291 */         glview.queueEvent(runnable);
-/*     */       }
-/*     */
-/* 294 */     };
-        int screenRotation = getScreenRotationInDegrees(display.getRotation());
-/* 295 */     PhtoSphereRenderer renderer = new PhtoSphereRenderer(this, scheduler, xMetersPerPixel, yMetersPerPixel, screenRotation, panoWidgetView);
-
-/* 297 */     glview.setRenderer(renderer);
+///* 196 */     WindowManager windowManager = (WindowManager)getSystemService("window");
+///* 197 */     Display display = windowManager.getDefaultDisplay();
+///* 198 */     DisplayMetrics displayMetrics = new DisplayMetrics();
+///* 199 */     if (Build.VERSION.SDK_INT >= 17) {
+///* 200 */       display.getRealMetrics(displayMetrics);
+///*     */     } else {
+///* 202 */       display.getMetrics(displayMetrics);
+///*     */     }
+//
+//        screenOnFlagHelper = new ScreenOnFlagHelper(this);
+//         glview = new GLSurfaceView(this);
+//        glview.setEGLContextClientVersion(2);
+///* 282 */     glview.setEGLConfigChooser(8, 8, 8, 8, 16, 8);
+///* 283 */     glview.setPreserveEGLContextOnPause(true);
+///*     */
+///* 285 */     float xMetersPerPixel = 0.0254F / displayMetrics.xdpi;
+///* 286 */     float yMetersPerPixel = 0.0254F / displayMetrics.ydpi;
+///*     */
+///* 288 */     VrWidgetRenderer.GLThreadScheduler scheduler = new VrWidgetRenderer.GLThreadScheduler()
+///*     */     {
+//            /*     */       public void queueGlThreadEvent(Runnable runnable) {
+///* 291 */         glview.queueEvent(runnable);
+///*     */       }
+///*     */
+///* 294 */     };
+//        int screenRotation = getScreenRotationInDegrees(display.getRotation());
+///* 295 */     PhtoSphereRenderer renderer = new PhtoSphereRenderer(this, scheduler, xMetersPerPixel, yMetersPerPixel, screenRotation, panoWidgetView);
+//
+///* 297 */     glview.setRenderer(renderer);
 
         // Initial launch of the app or an Activity recreation due to rotation.
         handleIntent(getIntent());
@@ -143,7 +146,8 @@ public class PhotoSphereViewer extends Activity {
 
     @Override
     protected void onPause() {
-        glview.onPause();
+        //glview.onPause();
+        //screenOnFlagHelper.stop();
         panoWidgetView.pauseRendering();
         super.onPause();
 
@@ -152,7 +156,8 @@ public class PhotoSphereViewer extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        glview.onResume();
+       // glview.onResume();
+        //screenOnFlagHelper.start();
         panoWidgetView.resumeRendering();
     }
 
