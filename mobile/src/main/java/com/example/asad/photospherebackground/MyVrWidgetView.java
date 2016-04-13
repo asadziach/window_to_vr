@@ -65,8 +65,7 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */   private static final float METERS_PER_INCH = 0.0254F;
 /*     */   
 /*     */ 
-/*     */ 
-/*  70 */   private PointF offsetDegrees = new PointF();
+/*     */
 /*     */   
 /*     */   private PhotoSphereRenderer renderer;
 /*     */   
@@ -85,8 +84,7 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */   private boolean isPaused;
 /*     */   
 /*     */ 
-/*     */ 
-/*     */   private VrParamsProvider viewerParamsProvider;
+/*     */
 /*     */   
 /*     */ 
 /*     */ 
@@ -102,8 +100,7 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */ 
 /*     */   public FullScreenDialog fullScreenDialog;
 /*     */   
-/*     */ 
-/*     */   private TrackingSensorsHelper sensorsHelper;
+/*     */
 /*     */   
 /*     */ 
 /*     */   private ScreenOnFlagHelper screenOnFlagHelper;
@@ -114,11 +111,7 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */   
 /*     */ 
 /*     */   private boolean isFullScreen;
-/*     */   
-/*     */
-/*     */   
-/*     */ 
-/*     */   private boolean isVrMode;
+
 /*     */   
 /*     */ 
 /*     */ 
@@ -152,9 +145,6 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */ 
 /*     */   private void init()
 /*     */   {
-/* 186 */     this.viewerParamsProvider = VrParamsProviderFactory.create(getContext());
-/*     */     
-/* 188 */     this.sensorsHelper = new TrackingSensorsHelper(getContext().getPackageManager());
               isFullScreen = true;
 /*     */     
 /* 193 */     this.screenOnFlagHelper = new ScreenOnFlagHelper(this.activity);
@@ -212,7 +202,7 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */       
 /* 294 */     };
 /* 295 */     this.renderer = createRenderer(getContext(), scheduler, xMetersPerPixel, yMetersPerPixel, 
-/* 296 */       getScreenRotationInDegrees(rotation));
+/* 296 */       0);
 /* 297 */     this.renderingView.setRenderer(this.renderer);
 /*     */   }
 /*     */   
@@ -231,18 +221,6 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 
 /*     */   private void toggleFullScreen()
 /*     */   {
-/* 353 */     if (!this.isFullScreen)
-/*     */     {
-/* 355 */       this.isVrMode = false;
-/*     */     }
-/*     */
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/* 363 */     updateVrMode();
-/*     */     
 /* 365 */     if (this.isFullScreen)
 /*     */     {
 
@@ -251,45 +229,10 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /* 376 */       this.fullScreenDialog.dismiss();
 /*     */     }
 /*     */
-/*     */     
-/* 382 */     this.eventListener.onDisplayModeChanged(getDisplayMode());
 /*     */   }
 /*     */
 
-/*     */   
-/*     */   private void updateVrMode() {
-/* 412 */     this.renderer.setVrMode(this.isVrMode);
-/*     */     
-/* 414 */     if (this.isVrMode) {
-/* 415 */       this.screenOnFlagHelper.start();
-/*     */     } else {
-/* 417 */       this.screenOnFlagHelper.stop();
-/*     */     }
 /*     */
-/*     */   }
-/*     */   
-/*     */  /*     */
-/*     */   private int getScreenRotationInDegrees(int rotation) {
-/* 471 */     switch (rotation) {
-/*     */     case 1: 
-/* 473 */       return 90;
-/*     */     case 2: 
-/* 475 */       return 180;
-/*     */     case 3: 
-/* 477 */       return 270;
-/*     */     }
-/*     */     
-/* 480 */     return 0;
-/*     */   }
-/*     */   
-
-/*     */ 
-/*     */ 
-/*     */   public void setEventListener(VrEventListener eventListener)
-/*     */   {
-/* 494 */        // super.setEventListener(eventListener);
-                this.eventListener = eventListener;
-/*     */   }
 /*     */   
 
 /*     */ 
@@ -307,7 +250,6 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */   {
 /* 522 */     this.renderingView.onResume();
 /* 523 */     this.renderer.onResume();
-/* 524 */     updateVrMode();
 /* 525 */     if (this.isFullScreen) {
 /* 526 */       this.fullScreenDialog.show();
 /*     */     }
@@ -326,51 +268,8 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */   }
 /*     */   
 /*     */ 
-/*     */
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */   protected Parcelable onSaveInstanceState()
-/*     */   {
-/* 617 */     Bundle bundle = new Bundle();
-/* 618 */     bundle.putParcelable("superClassState", super.onSaveInstanceState());
-/* 620 */     bundle.putBoolean("isFullScreen", this.isFullScreen);
-/* 621 */     bundle.putBoolean("isVrMode", this.isVrMode);
-/* 622 */     return bundle;
-/*     */   }
-/*     */   
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */   protected void onRestoreInstanceState(Parcelable state)
-/*     */   {
-/* 630 */     if ((state instanceof Bundle)) {
-/* 631 */       Bundle bundle = (Bundle)state;
-/* 633 */       this.isFullScreen = bundle.getBoolean("isFullScreen");
-/* 634 */       this.isVrMode = bundle.getBoolean("isVrMode");
-/* 635 */       state = bundle.getParcelable("superClassState");
-/*     */     }
-/* 637 */     super.onRestoreInstanceState(state);
-/*     */   }
-/*     */   
-/*     */   private int getDisplayMode() {
-/* 641 */     if (!this.isFullScreen) {
-/* 642 */       return 1;
-/*     */     }
-/* 644 */     return this.isVrMode ? 3 : 2;
-/*     */   }
-/*     */
-/*     */
-/*     */   
-/*     */   public static abstract class DisplayMode
-/*     */   {
-/*     */     public static final int EMBEDDED = 1;
-/*     */     public static final int FULLSCREEN_MONO = 2;
-/*     */     public static final int FULLSCREEN_VR = 3;
-/*     */   }
+
+
     public void loadImageFromBitmap(Bitmap bitmap, VrPanoramaView.Options panoOptions)
     {
 

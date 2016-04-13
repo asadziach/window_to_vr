@@ -48,7 +48,6 @@ public class PhotoSphereViewer extends Activity {
         super.onCreate(savedInstanceState);
 
         panoWidgetView = new MyVrWidgetView(this);
-        panoWidgetView.setEventListener(new ActivityEventListener());
         setContentView(panoWidgetView);
 
 ///* 196 */     WindowManager windowManager = (WindowManager)getSystemService("window");
