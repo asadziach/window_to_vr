@@ -153,8 +153,7 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */ 
 /*     */   private ScreenOnFlagHelper screenOnFlagHelper;
 /*     */   
-/*     */ 
-/*     */   private OrientationHelper orientationHelper;
+/*     *
 /*     */   
 /*     */
 /*     */   
@@ -226,8 +225,7 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */ 
 /* 214 */     setPadding(0, 0, 0, 0);
 /* 215 */     addView(this.innerWidgetView);
-/*     */     
-/* 217 */     this.orientationHelper = new OrientationHelper(this.activity);
+/*     */
 /*     */     
 /* 219 */     this.fullScreenDialog = new FullScreenDialog(getContext(), this.innerWidgetView, this.renderer);
 /* 220 */     this.fullScreenDialog.setOnCancelListener(new OnCancelListener()
@@ -292,17 +290,10 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */     
 /* 365 */     if (this.isFullScreen)
 /*     */     {
-/* 367 */       this.orientationHelper.lockOrientation();
-/*     */       
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
+
 /* 374 */       this.fullScreenDialog.show();
 /*     */     } else {
 /* 376 */       this.fullScreenDialog.dismiss();
-/* 377 */       this.orientationHelper.restoreOriginalOrientation();
 /*     */     }
 /*     */
 /*     */     
@@ -438,7 +429,6 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */   {
 /* 617 */     Bundle bundle = new Bundle();
 /* 618 */     bundle.putParcelable("superClassState", super.onSaveInstanceState());
-/* 619 */     bundle.putBundle("orientationHelperState", this.orientationHelper.onSaveInstanceState());
 /* 620 */     bundle.putBoolean("isFullScreen", this.isFullScreen);
 /* 621 */     bundle.putBoolean("isVrMode", this.isVrMode);
 /* 622 */     return bundle;
@@ -451,7 +441,6 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */   {
 /* 630 */     if ((state instanceof Bundle)) {
 /* 631 */       Bundle bundle = (Bundle)state;
-/* 632 */       this.orientationHelper.onRestoreInstanceState(bundle.getBundle("orientationHelperState"));
 /* 633 */       this.isFullScreen = bundle.getBoolean("isFullScreen");
 /* 634 */       this.isVrMode = bundle.getBoolean("isVrMode");
 /* 635 */       state = bundle.getParcelable("superClassState");
@@ -491,359 +480,3 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */ }
 
 
-/* Location:              /work/hobby/android_experiments/temp/widgets/commonwidget.aar_FILES/classes.jar!/com/google/vrtoolkit/cardboard/widgets/common/VrWidgetView.class
- * Java compiler version: 7 (51.0)
- * JD-Core Version:       0.7.1
- */
-
-/*     */ class ViewRotator
-/*     */ {
-    /*     */   private static final int ORIENTATION_DELTA_THRESHOLD_DEGREES = 70;
-    /*     */   private final View view;
-    /*     */   private int currentViewOrientation90Inc;
-    /*     */   private final int initialRotationDegrees;
-    /*     */   private int originalViewWidth;
-    /*     */   private int originalViewHeight;
-    /*     */   private OrientationEventListener orientationEventListener;
-    /*     */
-/*     */   public ViewRotator(Context context, View view, int initialRotationDegrees, final boolean trackingSensorsAvailable)
-/*     */   {
-/*  53 */     if (!isViewProperlyConfigured(view)) {
-/*  54 */       throw new IllegalArgumentException("View should have MATCH_PARENT layout and no translation.");
-/*     */     }
-/*     */
-/*     */
-/*  58 */     if (initialRotationDegrees < 180) {
-/*  59 */       this.initialRotationDegrees = initialRotationDegrees;
-/*     */     }
-/*     */     else {
-/*  62 */       this.initialRotationDegrees = (initialRotationDegrees - 180);
-/*     */     }
-/*     */
-/*  65 */     this.view = view;
-/*  66 */     this.orientationEventListener = new OrientationEventListener(context)
-/*     */     {
-            /*     */       public void onOrientationChanged(int orientation) {
-/*  69 */         if (!trackingSensorsAvailable) {
-/*  70 */           return;
-/*     */         }
-/*     */
-/*  73 */         if (orientation == -1) {
-/*  74 */           return;
-/*     */         }
-/*     */
-/*  77 */         orientation += ViewRotator.this.initialRotationDegrees;
-/*     */
-/*     */
-/*  80 */         if (orientation > 180) {
-/*  81 */           orientation -= 360;
-/*     */         }
-/*     */
-/*     */
-/*     */
-/*  86 */         int orientationDelta = orientation - ViewRotator.this.currentViewOrientation90Inc;
-/*     */
-/*     */
-/*     */
-/*  90 */         if (orientationDelta > 180) {
-/*  91 */           orientationDelta = 360 - orientationDelta;
-/*     */         }
-/*  93 */         if (orientationDelta < 65356) {
-/*  94 */           orientationDelta = 360 + orientationDelta;
-/*     */         }
-/*     */
-/*     */
-/*     */
-/*  99 */         if (Math.abs(orientationDelta) > 70) {
-/* 100 */           ViewRotator.this.rotateView(orientation);
-/*     */         }
-/*     */       }
-/*     */     };
-/*     */   }
-    /*     */
-/*     */
-/*     */
-/*     */   public void enable()
-/*     */   {
-/* 110 */     this.orientationEventListener.enable();
-/*     */   }
-    /*     */
-/*     */
-/*     */
-/*     */   public void disable()
-/*     */   {
-/* 117 */     this.orientationEventListener.disable();
-/*     */
-/* 119 */     ViewGroup.LayoutParams layoutParams = this.view.getLayoutParams();
-/* 120 */     layoutParams.height = -1;
-/* 121 */     layoutParams.width = -1;
-/* 122 */     this.view.setTranslationY(0.0F);
-/* 123 */     this.view.setTranslationX(0.0F);
-/* 124 */     this.view.setRotation(0.0F);
-/* 125 */     this.originalViewWidth = 0;
-/* 126 */     this.originalViewHeight = 0;
-/*     */   }
-    /*     */
-/*     */   private void rotateView(int newPhoneOrientation)
-/*     */   {
-/* 131 */     if (this.view.getParent() == null) {
-/* 132 */       return;
-/*     */     }
-/* 134 */     if ((this.originalViewWidth == 0) || (this.originalViewHeight == 0)) {
-/* 135 */       this.originalViewWidth = this.view.getWidth();
-/* 136 */       this.originalViewHeight = this.view.getHeight();
-/* 137 */       if ((this.originalViewWidth == 0) || (this.originalViewHeight == 0)) {
-/* 138 */         return;
-/*     */       }
-/*     */     }
-/*     */
-/*     */
-/*     */
-/* 144 */     this.currentViewOrientation90Inc = getNearestOrientationWith90Inc(newPhoneOrientation);
-/* 145 */     this.view.setRotation(-this.currentViewOrientation90Inc);
-/*     */
-/* 147 */     ViewGroup.LayoutParams layoutParams = this.view.getLayoutParams();
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/* 161 */     if (this.currentViewOrientation90Inc % 180 != 0) {
-/* 162 */       layoutParams.height = this.originalViewWidth;
-/* 163 */       layoutParams.width = this.originalViewHeight;
-/* 164 */       this.view.setTranslationX((this.originalViewWidth - this.originalViewHeight) / 2);
-/* 165 */       this.view.setTranslationY((this.originalViewHeight - this.originalViewWidth) / 2);
-/*     */     }
-/*     */     else {
-/* 168 */       layoutParams.height = this.originalViewHeight;
-/* 169 */       layoutParams.width = this.originalViewWidth;
-/* 170 */       this.view.setTranslationY(0.0F);
-/* 171 */       this.view.setTranslationX(0.0F);
-/*     */     }
-/*     */
-/* 174 */     this.view.requestLayout();
-/*     */   }
-    /*     */
-/*     */   static int getNearestOrientationWith90Inc(int orientation)
-/*     */   {
-/* 179 */     double orientationSign = Math.signum(orientation);
-/* 180 */     return (int)(orientationSign * Math.round(Math.abs(orientation) / 90.0D) * 90.0D);
-/*     */   }
-    /*     */
-/*     */   private static boolean isViewProperlyConfigured(View view) {
-/* 184 */     ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-/* 185 */     if ((layoutParams != null) && ((layoutParams.height != -1) || (layoutParams.width != -1)))
-/*     */     {
-/*     */
-/* 188 */       return false;
-/*     */     }
-/* 190 */     return (view.getTranslationX() == 0.0F) && (view.getTranslationY() == 0.0F);
-/*     */   }
-/*     */ }
-
-/*    */ class OrientationHelper
-/*    */ {
-    /*    */   private static final String STATE_KEY_IS_ORIENTATION_LOCKED = "isOrientationLocked";
-    /*    */   private static final String STATE_KEY_ORIGINAL_REQUESTED_ORIENTATION = "originalRequestedOrientation";
-    /*    */   private Activity activity;
-    /*    */   private boolean isOrientationLocked;
-    /*    */   private int originalRequestedOrientation;
-    /*    */
-/*    */   public OrientationHelper(Activity activity)
-/*    */   {
-/* 42 */     this.activity = activity;
-/*    */   }
-    /*    */
-/*    */   public boolean isInPortraitOrientation() {
-/* 46 */     return this.activity.getResources().getConfiguration().orientation == 1;
-/*    */   }
-    /*    */
-/*    */
-/*    */
-/*    */
-/*    */   public void lockOrientation()
-/*    */   {
-/* 54 */     if (this.isOrientationLocked) {
-/* 55 */       return;
-/*    */     }
-/*    */
-/* 58 */     this.originalRequestedOrientation = this.activity.getRequestedOrientation();
-/*    */
-/* 60 */     this.activity.setRequestedOrientation(isInPortraitOrientation() ?
-/* 61 */       1 : 0);
-/*    */
-/* 63 */     this.isOrientationLocked = true;
-/*    */   }
-    /*    */
-/*    */
-/*    */
-/*    */   public void restoreOriginalOrientation()
-/*    */   {
-/* 70 */     this.isOrientationLocked = false;
-/* 71 */     this.activity.setRequestedOrientation(this.originalRequestedOrientation);
-/*    */   }
-    /*    */
-/*    */
-/*    */
-/*    */   public Bundle onSaveInstanceState()
-/*    */   {
-/* 78 */     Bundle bundle = new Bundle();
-/* 79 */     bundle.putBoolean("isOrientationLocked", this.isOrientationLocked);
-/* 80 */     bundle.putInt("originalRequestedOrientation", this.originalRequestedOrientation);
-/* 81 */     return bundle;
-/*    */   }
-    /*    */
-/*    */
-/*    */
-/*    */   public void onRestoreInstanceState(Bundle state)
-/*    */   {
-/* 88 */     this.originalRequestedOrientation = state.getInt("originalRequestedOrientation");
-/* 89 */     this.isOrientationLocked = state.getBoolean("isOrientationLocked");
-/*    */   }
-/*    */ }
-
-/*     */ class TouchTracker
-/*     */   implements View.OnTouchListener
-/*     */ {
-    /*     */   public static final float DEFAULT_PITCH_BOUNDS_DEGREES = 15.0F;
-    /*     */   public static final float DEFAULT_DEGREES_PER_DPI_FACTOR = 0.033333335F;
-    /*     */   private final TouchEnabledVrView target;
-    /*  30 */   private PointF offsetDegrees = new PointF();
-    /*     */
-/*     */
-/*  33 */   private PointF pxToDegreesFactor = new PointF();
-    /*     */
-/*     */
-/*     */   private float pitchOffsetBoundsDegrees;
-    /*     */
-/*     */
-/*  39 */   private PointF lastTouchPointPx = new PointF();
-    /*     */
-/*     */
-/*     */
-/*  43 */   private PointF startTouchPointPx = new PointF();
-    /*     */
-/*     */
-/*     */   private boolean isYawing;
-    /*     */
-/*     */
-/*     */   private final float dipToPx;
-    /*     */
-/*     */
-/*     */   private final float scrollSlopPx;
-    /*     */
-/*     */
-/*     */   public TouchTracker(Context context, TouchEnabledVrView target)
-/*     */   {
-/*  57 */     this.target = target;
-/*  58 */     this.dipToPx = TypedValue.applyDimension(1, 1.0F, context
-/*  59 */       .getResources().getDisplayMetrics());
-/*  60 */     this.scrollSlopPx = ViewConfiguration.get(context).getScaledTouchSlop();
-/*  61 */     setTouchSpeed(0.033333335F, 0.033333335F);
-/*  62 */     setTouchPitchBounds(15.0F);
-/*     */   }
-    /*     */
-/*     */
-/*     */
-/*     */   TouchTracker(TouchEnabledVrView target, float dipToPx, float scrollSlopPx)
-/*     */   {
-/*  69 */     this.target = target;
-/*  70 */     this.dipToPx = dipToPx;
-/*  71 */     this.scrollSlopPx = scrollSlopPx;
-/*  72 */     setTouchSpeed(0.033333335F, 0.033333335F);
-/*  73 */     setTouchPitchBounds(15.0F);
-/*     */   }
-    /*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */   public void setTouchSpeed(float xSpeed, float ySpeed)
-/*     */   {
-/*  84 */     this.pxToDegreesFactor.set(this.dipToPx * xSpeed, this.dipToPx * ySpeed);
-/*     */   }
-    /*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */   public void setTouchPitchBounds(float pitchBoundsDegrees)
-/*     */   {
-/*  99 */     this.pitchOffsetBoundsDegrees = Math.min(Math.max(0.0F, pitchBoundsDegrees), 45.0F);
-/*     */   }
-    /*     */
-/*     */   public boolean onTouch(View view, MotionEvent event)
-/*     */   {
-/* 104 */     switch (event.getAction()) {
-/*     */     case 0:
-/* 106 */       this.startTouchPointPx.set(event.getX(), event.getY());
-/* 107 */       this.lastTouchPointPx.set(event.getX(), event.getY());
-/* 108 */       view.getParent().requestDisallowInterceptTouchEvent(true);
-/* 109 */       this.isYawing = false;
-/* 110 */       return true;
-/*     */     case 2:
-/* 112 */       if (!this.isYawing)
-/*     */       {
-/*     */
-/* 115 */         if ((this.pxToDegreesFactor.x == 0.0F) && (this.pxToDegreesFactor.y == 0.0F))
-/*     */         {
-/*     */
-/* 118 */           view.getParent().requestDisallowInterceptTouchEvent(false);
-/* 119 */           return false; }
-/* 120 */         if ((this.pitchOffsetBoundsDegrees == 0.0F) &&
-/* 121 */           (Math.abs(event.getY() - this.startTouchPointPx.y) > this.scrollSlopPx))
-/*     */         {
-/*     */
-/*     */
-/* 125 */           view.getParent().requestDisallowInterceptTouchEvent(false);
-/* 126 */           return false; }
-/* 127 */         if (Math.abs(event.getX() - this.startTouchPointPx.x) > this.scrollSlopPx)
-/*     */         {
-/*     */
-/* 130 */           this.isYawing = true;
-/*     */         }
-/*     */       }
-/*     */
-/*     */
-/* 135 */       this.offsetDegrees.x += this.pxToDegreesFactor.x * (event.getX() - this.lastTouchPointPx.x);
-/* 136 */       this.offsetDegrees.y += this.pxToDegreesFactor.y * (event.getY() - this.lastTouchPointPx.y);
-/* 137 */       this.offsetDegrees.y = Math.max(-this.pitchOffsetBoundsDegrees,
-/* 138 */         Math.min(this.offsetDegrees.y, this.pitchOffsetBoundsDegrees));
-/* 139 */       this.target.setYawPitchOffset(this.offsetDegrees.x, this.offsetDegrees.y);
-/* 140 */       this.lastTouchPointPx.set(event.getX(), event.getY());
-/* 141 */       return true;
-/*     */     case 1:
-/* 143 */       if ((Math.abs(event.getX() - this.startTouchPointPx.x) < this.scrollSlopPx) &&
-/* 144 */         (Math.abs(event.getY() - this.startTouchPointPx.y) < this.scrollSlopPx)) {
-/* 145 */         this.target.getEventListener().onClick();
-/*     */       }
-/* 147 */       view.getParent().requestDisallowInterceptTouchEvent(false);
-/* 148 */       return true;
-/*     */     }
-/*     */
-/* 151 */     return false;
-/*     */   }
-    /*     */
-/*     */   static abstract interface TouchEnabledVrView
-/*     */   {
-        /*     */     public abstract void setYawPitchOffset(float paramFloat1, float paramFloat2);
-        /*     */
-/*     */     public abstract VrEventListener getEventListener();
-/*     */   }
-/*     */ }
