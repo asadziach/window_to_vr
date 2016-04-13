@@ -46,7 +46,7 @@
                 android:resource="@xml/wallpaper" />
         </service>
 
-        <activity android:name=".PhotoSphereViewer">
+        <activity android:name=".PhotoSphereViewer" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
