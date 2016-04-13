@@ -1,4 +1,4 @@
-include ':libraries:audio'
+include ':libraries:audio', ':testappwearable'
 include ':libraries:common'
 include ':libraries:commonwidget'
 include ':libraries:core'
@@ -6,3 +6,4 @@ include ':libraries:panowidget'
 include ':libraries:videowidget'
 
 include ':mobile', ':wear'
+include ':sdkControllerApp'

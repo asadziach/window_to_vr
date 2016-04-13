@@ -229,9 +229,10 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /* 186 */     this.viewerParamsProvider = VrParamsProviderFactory.create(getContext());
 /*     */     
 /* 188 */     this.sensorsHelper = new TrackingSensorsHelper(getContext().getPackageManager());
-/* 189 */     this.isCardboardButtonEnabled = this.sensorsHelper.areTrackingSensorsAvailable();
+              isFullScreen = true;
+/* 189 */     this.isCardboardButtonEnabled = false;// this.sensorsHelper.areTrackingSensorsAvailable();
 /* 190 */     this.isFullscreenButtonEnabled = true;
-/* 191 */     this.isInfoButtonEnabled = true;
+/* 191 */     this.isInfoButtonEnabled = false;
 /*     */     
 /* 193 */     this.screenOnFlagHelper = new ScreenOnFlagHelper(this.activity);
 /*     */     

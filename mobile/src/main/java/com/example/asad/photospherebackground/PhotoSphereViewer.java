@@ -5,13 +5,19 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.opengl.GLSurfaceView;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Pair;
+import android.view.Display;
+import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.google.vrtoolkit.cardboard.widgets.common.VrWidgetView;
+import com.google.vrtoolkit.cardboard.widgets.common.VrWidgetRenderer;
+import com.google.vrtoolkit.cardboard.widgets.pano.PhtoSphereRenderer;
 import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaEventListener;
 import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView.Options;
@@ -38,6 +44,7 @@ public class PhotoSphereViewer extends Activity {
     private VrPanoramaView.Options panoOptions = new Options();
     private ImageLoaderTask backgroundImageLoaderTask;
 
+    private GLSurfaceView glview;
     /**
      * Called when the app is launched via the app icon or an intent using the adb command above. This
      * initializes the app and loads the image to render.
@@ -47,15 +54,43 @@ public class PhotoSphereViewer extends Activity {
         super.onCreate(savedInstanceState);
 
         panoWidgetView = new MyVrWidgetView(this);
-        panoWidgetView.setEventListener(new ActivityEventListener());
+//        panoWidgetView.setEventListener(new ActivityEventListener());
+//        setContentView(panoWidgetView);
 
-        setContentView(panoWidgetView);
+/* 196 */     WindowManager windowManager = (WindowManager)getSystemService("window");
+/* 197 */     Display display = windowManager.getDefaultDisplay();
+/* 198 */     DisplayMetrics displayMetrics = new DisplayMetrics();
+/* 199 */     if (Build.VERSION.SDK_INT >= 17) {
+/* 200 */       display.getRealMetrics(displayMetrics);
+/*     */     } else {
+/* 202 */       display.getMetrics(displayMetrics);
+/*     */     }
+
+         glview = new GLSurfaceView(this);
+        glview.setEGLContextClientVersion(2);
+/* 282 */     glview.setEGLConfigChooser(8, 8, 8, 8, 16, 8);
+/* 283 */     glview.setPreserveEGLContextOnPause(true);
+/*     */
+/* 285 */     float xMetersPerPixel = 0.0254F / displayMetrics.xdpi;
+/* 286 */     float yMetersPerPixel = 0.0254F / displayMetrics.ydpi;
+/*     */
+/* 288 */     VrWidgetRenderer.GLThreadScheduler scheduler = new VrWidgetRenderer.GLThreadScheduler()
+/*     */     {
+            /*     */       public void queueGlThreadEvent(Runnable runnable) {
+/* 291 */         glview.queueEvent(runnable);
+/*     */       }
+/*     */
+/* 294 */     };
+        int screenRotation = getScreenRotationInDegrees(display.getRotation());
+/* 295 */     PhtoSphereRenderer renderer = new PhtoSphereRenderer(this, scheduler, xMetersPerPixel, yMetersPerPixel, screenRotation, panoWidgetView);
+
+/* 297 */     glview.setRenderer(renderer);
 
         // Initial launch of the app or an Activity recreation due to rotation.
         handleIntent(getIntent());
     }
 
-    /**
+    /*
      * Called when the Activity is already running and it's given a new intent.
      */
     @Override
@@ -108,13 +143,16 @@ public class PhotoSphereViewer extends Activity {
 
     @Override
     protected void onPause() {
+        glview.onPause();
         panoWidgetView.pauseRendering();
         super.onPause();
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        glview.onResume();
         panoWidgetView.resumeRendering();
     }
 
@@ -199,4 +237,17 @@ public class PhotoSphereViewer extends Activity {
             Log.e(TAG, "Error loading pano: " + errorMessage);
         }
     }
+
+    /*     */   private int getScreenRotationInDegrees(int rotation) {
+/* 471 */     switch (rotation) {
+/*     */     case 1:
+/* 473 */       return 90;
+/*     */     case 2:
+/* 475 */       return 180;
+/*     */     case 3:
+/* 477 */       return 270;
+/*     */     }
+/*     */
+/* 480 */     return 0;
+/*     */   }
 }
