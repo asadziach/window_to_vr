@@ -44,39 +44,7 @@ import com.google.vrtoolkit.cardboard.widgets.pano.PhtoSphereRenderer;
 import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaEventListener;
 import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */
 
-/*     */
-/*     */ 
 /*     */ 
 /*     */ 
 /*     */ public class MyVrWidgetView
@@ -327,13 +295,7 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /* 480 */     return 0;
 /*     */   }
 /*     */   
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
+
 /*     */ 
 /*     */ 
 /*     */   public void setEventListener(VrEventListener eventListener)
@@ -342,12 +304,7 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
                 this.eventListener = eventListener;
 /*     */   }
 /*     */   
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
+
 /*     */ 
 /*     */   public void pauseRendering()
 /*     */   {
@@ -357,12 +314,7 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /* 509 */     this.isPaused = true;
 /*     */   }
 /*     */   
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
+
 /*     */ 
 /*     */   public void resumeRendering()
 /*     */   {
@@ -376,16 +328,7 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */   }
 /*     */   
 /*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
+
 /*     */   public void shutdown()
 /*     */   {
 /* 546 */     if (!this.isPaused) {
@@ -396,29 +339,7 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */   }
 /*     */   
 /*     */ 
-/*     */ 
-/*     */   PointF getYawPitchOffset()
-/*     */   {
-/* 557 */     return this.offsetDegrees;
-/*     */   }
-/*     */   
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */   public void setOnTouchListener(OnTouchListener touchListener)
-/*     */   {
-/* 605 */     super.setOnTouchListener(touchListener);
-/*     */   }
-/*     */   
-/*     */ 
+/*     */
 /*     */ 
 /*     */ 
 /*     */ 
