@@ -80,7 +80,7 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */ 
 /*     */ 
 /*     */ public class MyVrWidgetView
-/*     */   extends VrWidgetView
+/*     */   extends FrameLayout
 /*     */ {
 /*  41 */   private static final String TAG = MyVrWidgetView.class.getSimpleName();
 /*     */   
@@ -346,7 +346,7 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */ 
 /*     */ 
 /*     */   protected  PhtoSphereRenderer createRenderer(Context paramContext, VrWidgetRenderer.GLThreadScheduler glThreadScheduler, float xMetersPerPixel, float yMetersPerPixel, int screenRotation){
-               this.renderer = new PhtoSphereRenderer(getContext(), glThreadScheduler, xMetersPerPixel, yMetersPerPixel, screenRotation, this);
+               this.renderer = new PhtoSphereRenderer(getContext(), glThreadScheduler, xMetersPerPixel, yMetersPerPixel, screenRotation);
 
               return this.renderer;
             }
@@ -540,7 +540,7 @@ import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 /*     */ 
 /*     */   public void setEventListener(VrEventListener eventListener)
 /*     */   {
-/* 494 */         super.setEventListener(eventListener);
+/* 494 */        // super.setEventListener(eventListener);
                 this.eventListener = eventListener;
 /*     */   }
 /*     */   

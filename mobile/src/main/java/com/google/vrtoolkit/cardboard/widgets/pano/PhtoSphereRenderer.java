@@ -3,7 +3,6 @@ package com.google.vrtoolkit.cardboard.widgets.pano;
 
 import android.content.Context;
 
-import com.example.asad.photospherebackground.MyVrWidgetView;
 import com.google.vrtoolkit.cardboard.widgets.common.VrWidgetRenderer;
 
 /**
@@ -11,7 +10,7 @@ import com.google.vrtoolkit.cardboard.widgets.common.VrWidgetRenderer;
  */
 public class PhtoSphereRenderer extends VrPanoramaRenderer{
 
-    public PhtoSphereRenderer(Context context, VrWidgetRenderer.GLThreadScheduler glThreadScheduler, float xMetersPerPixel, float yMetersPerPixel, int screenRotation, MyVrWidgetView panoView)
+    public PhtoSphereRenderer(Context context, VrWidgetRenderer.GLThreadScheduler glThreadScheduler, float xMetersPerPixel, float yMetersPerPixel, int screenRotation)
     {
         super(context, glThreadScheduler, xMetersPerPixel, yMetersPerPixel, screenRotation, new VrPanoramaView(context));
     }
