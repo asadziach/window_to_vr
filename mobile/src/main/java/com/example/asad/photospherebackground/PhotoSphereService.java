@@ -23,10 +23,24 @@ public class PhotoSphereService  extends GLWallpaperService {
         MyRenderer renderer;
         public MyEngine() {
             super();
+
+            setEGLContextClientVersion(2);
+            setEGLConfigChooser(8, 8, 8, 8, 16, 8);
+
             // handle prefs, other initialization
             renderer = new MyRenderer();
             setRenderer(renderer);
             setRenderMode(RENDERMODE_CONTINUOUSLY);
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+        }
+
+        @Override
+        public void onPause() {
+            super.onPause();
         }
 
         public void onDestroy() {

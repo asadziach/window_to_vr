@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
 
+import com.google.vrtoolkit.cardboard.widgets.common.VrWidgetRenderer;
 import com.google.vrtoolkit.cardboard.widgets.pano.PhotoSphereRenderer;
 import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView;
 import com.google.vrtoolkit.cardboard.widgets.pano.VrPanoramaView.Options;
@@ -43,8 +44,8 @@ public class PhotoSphereViewer extends Activity {
     private VrPanoramaView.Options panoOptions = new Options();
     private ImageLoaderTask backgroundImageLoaderTask;
 
-    //private GLSurfaceView glview;
-    //private ScreenOnFlagHelper screenOnFlagHelper;
+    private GLSurfaceView glView;
+    PhotoSphereRenderer renderer;
 
     /**
      * Called when the app is launched via the app icon or an intent using the adb command above. This
@@ -54,9 +55,22 @@ public class PhotoSphereViewer extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        panoWidgetView = new VrViewHelper(this);
-        GLSurfaceView glView = panoWidgetView.getRenderingView();
-        PhotoSphereRenderer renderer = panoWidgetView.getRenderer();
+        glView = new GLSurfaceView(this);
+        glView.setEGLContextClientVersion(2);
+        glView.setEGLConfigChooser(8, 8, 8, 8, 16, 8);
+        glView.setPreserveEGLContextOnPause(true);
+
+        VrWidgetRenderer.GLThreadScheduler scheduler = new VrWidgetRenderer.GLThreadScheduler() {
+            public void queueGlThreadEvent(Runnable runnable) {
+                glView.queueEvent(runnable);
+            }
+
+        };
+
+        panoWidgetView = new VrViewHelper(this,scheduler);
+
+        renderer = panoWidgetView.getRenderer();
+
         glView.setRenderer(renderer);
 
         setContentView(glView);
@@ -118,9 +132,8 @@ public class PhotoSphereViewer extends Activity {
 
     @Override
     protected void onPause() {
-        //glview.onPause();
-        //screenOnFlagHelper.stop();
-        panoWidgetView.pauseRendering();
+        glView.onPause();
+        renderer.onPause();
         super.onPause();
 
     }
@@ -128,9 +141,8 @@ public class PhotoSphereViewer extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        // glview.onResume();
-        //screenOnFlagHelper.start();
-        panoWidgetView.resumeRendering();
+        glView.onResume();
+        renderer.onResume();;
     }
 
     @Override

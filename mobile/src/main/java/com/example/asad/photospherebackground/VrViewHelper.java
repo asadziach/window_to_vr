@@ -31,19 +31,14 @@ public class VrViewHelper {
     private boolean isPaused;
 
 
-    private GLSurfaceView renderingView;
-
     private Context context;
 
+    VrWidgetRenderer.GLThreadScheduler scheduler;
 
-    public VrViewHelper(Context context) {
+    public VrViewHelper(Context context, VrWidgetRenderer.GLThreadScheduler scheduler) {
         this.context = context;
+        this.scheduler = scheduler;
         init();
-    }
-
-
-    GLSurfaceView getRenderingView() {
-        return this.renderingView;
     }
 
     private void init() {
@@ -69,42 +64,16 @@ public class VrViewHelper {
     }
 
     private void initializeRenderingView() {
-        this.renderingView = new GLSurfaceView(context);
-        this.renderingView.setEGLContextClientVersion(2);
-        this.renderingView.setEGLConfigChooser(8, 8, 8, 8, 16, 8);
-        this.renderingView.setPreserveEGLContextOnPause(true);
+
 
         float xMetersPerPixel = 0.0254F / this.displayMetrics.xdpi;
         float yMetersPerPixel = 0.0254F / this.displayMetrics.ydpi;
 
-        VrWidgetRenderer.GLThreadScheduler scheduler = new VrWidgetRenderer.GLThreadScheduler() {
-            public void queueGlThreadEvent(Runnable runnable) {
-                VrViewHelper.this.renderingView.queueEvent(runnable);
-            }
 
-        };
         this.renderer = new PhotoSphereRenderer(context, scheduler, xMetersPerPixel, yMetersPerPixel, 0);
     }
 
 
-    public void pauseRendering() {
-
-        this.renderingView.onPause();
-
-        this.renderer.onPause();
-
-        this.isPaused = true;
-    }
-
-
-    public void resumeRendering() {
-
-        this.renderingView.onResume();
-
-        this.renderer.onResume();
-
-        this.isPaused = false;
-    }
 
 
     public void shutdown() {
